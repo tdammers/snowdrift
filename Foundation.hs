@@ -235,7 +235,8 @@ require permission target = do
     maybe_page <- runDB $ getBy $ UniqueWikiTarget target
 
     return $ case maybe_page of
-        Nothing -> Unauthorized "Page does not exist."
+        -- Non-existant pages automatically grant view permission; the 404 is handled elsewhere
+        Nothing -> Authorized
         Just (Entity _ page) -> if role >= permission page then Authorized else Unauthorized "You do not have sufficient permissions."
 
 
